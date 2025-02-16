@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python in WebAssembly</title>
+</head>
+<body>
+  <h1>WebAssembly: Python "Hello, World"</h1>
+  <button id="run-python">Run Python</button>
+  <pre id="output"></pre>
+
+  <script type="module">
+    // Load Pyodide from CDN
+    import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.mjs";
+
+    async function main() {
+      const output = document.getElementById("output");
+      output.textContent = "Loading Python...";
+
+      // Load Pyodide
+      let pyodide = await loadPyodide();
+      output.textContent = "Python Loaded";
+
+      // Define the Python script
+      const pythonScript = `print("Hello, World from Python in WebAssembly!")`;
+
+      // Add event listener to run the script
+      document.getElementById("run-python").addEventListener("click", async () => {
+        output.textContent = "Running Python...";
+        try {
+          const result = pyodide.runPython(pythonScript);
+          output.textContent = result || "Script executed successfully!";
+        } catch (err) {
+          output.textContent = "Error: " + err;
+        }
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>
